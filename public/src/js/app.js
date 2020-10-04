@@ -1,16 +1,22 @@
 var deferredPrompt;
 
+if (!window.Promise) window.Promise = Promise;
+
 if ("serviceWorker" in navigator) {
   navigator.serviceWorker
-    .register("/service-worker.js") // .register("/service-worker.js", { scope: "/help" })
-    .then(() => console.log("Service worker registered!"));
+    .register("/sw.js")
+    .then(function () {
+      console.log("Service worker registered!");
+    })
+    .catch(function (err) {
+      console.log(err);
+    });
 }
 
-window.addEventListener("beforeinstallprompt", (e) => {
-  console.log(e);
-  e.preventDefault();
-
-  deferredPrompt = e;
+window.addEventListener("beforeinstallprompt", function (event) {
+  console.log("beforeinstallprompt fired");
+  event.preventDefault();
+  deferredPrompt = event;
 
   return false;
 });
